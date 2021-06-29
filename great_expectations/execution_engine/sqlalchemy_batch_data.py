@@ -221,8 +221,7 @@ class SqlAlchemyBatchData(BatchData):
             # Split is case sensitive so detect case.
             # Note: transforming query to uppercase/lowercase has unintended consequences (i.e.,
             # changing column names), so this is not an option!
-            if not isinstance(query, str):
-                query = query.string  # extracting string from MSSQLCompiler object
+            query = query.string  # extracting string from MSSQLCompiler object
             
             if "from" in query:
                 strsep = "from"

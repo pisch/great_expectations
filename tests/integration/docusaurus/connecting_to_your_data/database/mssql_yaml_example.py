@@ -4,7 +4,7 @@ from util import load_data_into_database
 import great_expectations as ge
 from great_expectations.core.batch import BatchRequest, RuntimeBatchRequest
 
-CONNECTION_STRING = "mssql+pyodbc://sa:ReallyStrongPwd1234%^&*@localhost:1433/test_ci?driver=ODBC Driver 17 for SQL Server&charset=utf&autocommit=true"
+CONNECTION_STRING = "mssql+pyodbc://sa:ReallyStrongPwd1234%^&*@localhost:1433/tempdb?driver=ODBC Driver 17 for SQL Server&charset=utf&autocommit=true"
 load_data_into_database(
     "taxi_data",
     "./data/yellow_trip_data_sample_2019-01.csv",
@@ -61,24 +61,24 @@ print(validator.head())
 # assert isinstance(validator, ge.validator.validator.Validator)
 
 # Here is a BatchRequest naming a table
-# batch_request = BatchRequest(
-#     datasource_name="my_mssql_datasource",
-#     data_connector_name="default_inferred_data_connector_name",
-#     data_asset_name="taxi_data",  # this is the name of the table you want to retrieve
-# )
-# context.create_expectation_suite(
-#     expectation_suite_name="test_suite", overwrite_existing=True
-# )
-# validator = context.get_validator(
-#     batch_request=batch_request, expectation_suite_name="test_suite"
-# )
-# print(validator.head())
-#
-# # NOTE: The following code is only for testing and can be ignored by users.
-# assert isinstance(validator, ge.validator.validator.Validator)
-# assert [ds["name"] for ds in context.list_datasources()] == ["my_mssql_datasource"]
-# assert "taxi_data" in set(
-#     context.get_available_data_asset_names()["my_mssql_datasource"][
-#         "default_inferred_data_connector_name"
-#     ]
-# )
+batch_request = BatchRequest(
+    datasource_name="my_mssql_datasource",
+    data_connector_name="default_inferred_data_connector_name",
+    data_asset_name="taxi_data",  # this is the name of the table you want to retrieve
+)
+context.create_expectation_suite(
+    expectation_suite_name="test_suite", overwrite_existing=True
+)
+validator = context.get_validator(
+    batch_request=batch_request, expectation_suite_name="test_suite"
+)
+print(validator.head())
+
+# NOTE: The following code is only for testing and can be ignored by users.
+assert isinstance(validator, ge.validator.validator.Validator)
+assert [ds["name"] for ds in context.list_datasources()] == ["my_mssql_datasource"]
+assert "taxi_data" in set(
+    context.get_available_data_asset_names()["my_mssql_datasource"][
+        "default_inferred_data_connector_name"
+    ]
+)
