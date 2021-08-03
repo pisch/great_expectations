@@ -190,6 +190,11 @@ class Validator:
         """
 
         def inst_expectation(*args, **kwargs):
+            remove_expectation = False
+            if kwargs.get("remove", False):
+                kwargs = {foo: kwargs[foo] for foo in kwargs if foo != "remove"}
+                remove_expectation = True
+
             try:
                 expectation_impl = get_expectation_impl(name)
                 allowed_config_keys = expectation_impl.get_allowed_config_keys()
@@ -222,6 +227,10 @@ class Validator:
                 configuration = ExpectationConfiguration(
                     expectation_type=name, kwargs=expectation_kwargs, meta=meta
                 )
+
+                if remove_expectation:
+                    self.remove_expectation(configuration)
+                    return "removed"
 
                 # runtime_configuration = configuration.get_runtime_kwargs()
                 expectation = expectation_impl(configuration)
